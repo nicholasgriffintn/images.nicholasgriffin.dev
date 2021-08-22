@@ -3,6 +3,12 @@ service: images-nicholasgriffin-dev
 plugins:
   - serverless-dotenv-plugin
   - serverless-offline
+  - 'serverless-apigw-binary'
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
 
 provider:
   name: aws
@@ -12,10 +18,8 @@ provider:
   region: eu-west-1
 
 functions:
-  resize:
-    handler: index.resize
+  api:
+    handler: server.express
     events:
-      - http:
-          path: resize
-          method: get
-          cors: true
+      - http: ANY {proxy+}
+      - http: ANY /
